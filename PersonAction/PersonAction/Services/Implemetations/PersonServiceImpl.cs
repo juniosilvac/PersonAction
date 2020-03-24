@@ -1,4 +1,5 @@
 ﻿using PersonAction.Model;
+using PersonAction.Model.Context;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -8,10 +9,25 @@ namespace PersonAction.Services.Implemetations
     public class PersonServiceImpl : IPersonService
     {
         private volatile int count;
+        private MySqlContext _context;
+
+        public PersonServiceImpl(MySqlContext context)
+        {
+            _context = context;
+        }
 
         public Person Create(Person person)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _context.Add(person);
+                _context.SaveChanges();
+
+            } catch (Exception ex)
+            {
+                throw ex;
+            }
+            return person;            
         }
 
         public void Delete(long id)
